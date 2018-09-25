@@ -658,7 +658,7 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -741,7 +741,7 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -824,7 +824,7 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -836,14 +836,14 @@
         <name2/>
       </key>
       <key>
-        <name>Customer</name>
+        <name>ContactId</name>
         <field>id</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
         <name>id</name>
-        <rename>Customer</rename>
+        <rename>ContactId</rename>
         <update>Y</update>
       </value>
       <value>
@@ -1016,7 +1016,7 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <sql>SELECT TOP 100
+    <sql>SELECT
 	CrmContact.ContactId,
 	CrmContact.FullName,
 	CrmContact.Title,
@@ -1024,11 +1024,13 @@
 	CrmContact.MiddleName,
 	CrmContact.LastName,
 
+
 	CrmEmail.ContactId AS EmailContactId,
 	CrmEmail.Email,
 
 	CrmTelephone.ContactId AS TelephoneContactId,
 	CrmTelephone.Telephone,
+	CrmFax.Telephone AS Fax,
 
 	CrmAddress.ContactId AS AddressContactId,
 	CrmAddress.Building,
@@ -1039,13 +1041,13 @@
 	CrmAddress.Country,
 	CrmAddress.Zip
 FROM CrmContact
-	LEFT JOIN CrmEmail ON CrmContact.ContactId=CrmEmail.ContactId
-	LEFT JOIN CrmTelephone ON CrmContact.ContactId=CrmTelephone.ContactId
-	LEFT JOIN CrmAddress ON CrmContact.ContactId=CrmAddress.ContactId
-
-WHERE CrmContact.ContactId NOT IN (SELECT id from synced_record where module='Contacts')
-ORDER BY CrmContact.ContactId ASC
-</sql>
+	LEFT JOIN CrmEmail ON CrmContact.ContactId=CrmEmail.ContactId AND CrmEmail.EmailType=1
+	LEFT JOIN CrmTelephone ON CrmContact.ContactId=CrmTelephone.ContactId AND CrmTelephone.TelephoneType=1
+	LEFT JOIN CrmTelephone AS CrmFax ON CrmContact.ContactId=CrmFax.ContactId AND CrmFax.TelephoneType=4
+	LEFT JOIN CrmAddress ON CrmContact.ContactId=CrmAddress.ContactId AND CrmAddress.AddressType=2
+	LEFT JOIN synced_record ON CrmContact.ContactId = synced_record.id AND synced_record.module='Contacts'
+WHERE synced_record.id IS NULL
+ORDER BY CrmContact.ContactId ASC</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1172,8 +1174,18 @@ post_fields.salutation = Title;
 var FNameArray = [FirstName, MiddleName];
 post_fields.first_name = FNameArray.join(' ');
 post_fields.last_name = LastName;
-post_fields.email1 = Email
+
+if(Email != '' &amp;&amp; Email != null &amp;&amp; Email.length > 0){
+	emails = Email.split(';');
+	var i;
+	for(i=1; i &lt;= emails.length; i++){
+		fieldName = 'email'+ i;
+		post_fields[fieldName] = emails[i];
+	
+	}
+}
 post_fields.phone_work = Telephone;
+post_fields.phone_fax = Fax;
 post_fields.primary_address_street = Building;
 post_fields.primary_address_postalcode = Zip;
 
@@ -1225,7 +1237,7 @@ post_fields = out.join('&amp;');
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
