@@ -498,38 +498,13 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get-Input-LineItems</from>
-      <to>Get Variables</to>
+      <from>Create Contact1</from>
+      <to>Record Synced1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Check Duplicate1</from>
-      <to>Duplicate record1</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Find Duplicate1</from>
-      <to>JSON Input</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Is Already Synced</from>
-      <to>Find Duplicate1</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Is Already Synced</from>
-      <to>Update LineItem</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>JSON Input</from>
-      <to>Check Duplicate1</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Modified Java Script Value</from>
-      <to>Is Already Synced</to>
+      <from>Create Contact1</from>
+      <to>Create Error1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -538,86 +513,48 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Check Duplicate1</from>
-      <to>Create LineItem</to>
+      <from>Get-Input-Invoices</from>
+      <to>Get Variables</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>JSON Input 2 2</from>
-      <to>Record Synced1 2</to>
+      <from>Modified Java Script Value</from>
+      <to>Find Invoice</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Update LineItem</from>
-      <to>JSON Input 2 2</to>
+      <from>Find Invoice</from>
+      <to>Find Invoice Error1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Update LineItem</from>
-      <to>Update Error</to>
+      <from>Find Invoice</from>
+      <to>JSON Input 1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>JSON Input 2 3</from>
-      <to>Record Synced1</to>
+      <from>Modified Java Script Value 2</from>
+      <to>Create Contact1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create LineItem</from>
-      <to>JSON Input 2 3</to>
+      <from>JSON Input 1</from>
+      <to>Check Invoice</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create LineItem</from>
-      <to>Create Error1</to>
+      <from>Check Invoice</from>
+      <to>Modified Java Script Value 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check Invoice</from>
+      <to>Duplicate record1</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Check Duplicate1</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Create LineItem</send_true_to>
-    <send_false_to>Duplicate record1</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>record_id</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text/>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>Y</isnull>
-          <mask>yyyy/MM/dd HH:mm:ss</mask>
-        </value>
-      </condition>
-    </compare>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>864</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Create LineItem</name>
+    <name>Create Contact1</name>
     <type>Rest</type>
     <description/>
     <distribute>N</distribute>
@@ -672,7 +609,7 @@
     </GUI>
   </step>
   <step>
-    <name>Duplicate record1</name>
+    <name>Create Error1</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -683,7 +620,7 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -695,39 +632,49 @@
         <name2/>
       </key>
       <key>
-        <name>StockCode</name>
+        <name>UniqueID</name>
         <field>id</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
         <name>id</name>
-        <rename>StockCode</rename>
-        <update>N</update>
+        <rename>UniqueID</rename>
+        <update>Y</update>
       </value>
       <value>
         <name>module</name>
         <rename>MODULE</rename>
-        <update>N</update>
+        <update>Y</update>
       </value>
       <value>
         <name>is_duplicate</name>
-        <rename>DUPLICATE</rename>
+        <rename>NOT_DUPLICATE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>Error_description</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_field_name</name>
+        <rename>Error_fields_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_code</name>
+        <rename>Error_code</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>no_of_errors</name>
+        <rename>No_of_errors</rename>
         <update>Y</update>
       </value>
       <value>
         <name>is_synced</name>
         <rename>NOT_SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>duplicate_sugarcrm_id</name>
-        <rename>record_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -739,13 +686,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>864</xloc>
+      <xloc>976</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Find Duplicate1</name>
+    <name>Find Invoice</name>
     <type>Rest</type>
     <description/>
     <distribute>N</distribute>
@@ -756,12 +703,12 @@
       <schema_name/>
     </partitioning>
     <applicationType>FORM URLENCODED</applicationType>
-    <method>POST</method>
-    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/LI_Line_Items/duplicateCheck</url>
-    <urlInField>N</urlInField>
+    <method>GET</method>
+    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/Inv_Invoice</url>
+    <urlInField>Y</urlInField>
     <dynamicMethod>N</dynamicMethod>
     <methodFieldName/>
-    <urlField>url</urlField>
+    <urlField>API_URL</urlField>
     <bodyField>post_fields</bodyField>
     <httpLogin/>
     <httpPassword>Encrypted </httpPassword>
@@ -781,7 +728,7 @@
     <matrixParameters>
       </matrixParameters>
     <result>
-      <name>result</name>
+      <name>invoice_result</name>
       <code/>
       <response_time/>
       <response_header/>
@@ -794,8 +741,91 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>624</xloc>
+      <xloc>464</xloc>
       <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Find Invoice Error1</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>50</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>UniqueID</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>UniqueID</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_duplicate</name>
+        <rename>NOT_DUPLICATE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>Error_description</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_field_name</name>
+        <rename>Error_fields_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_code</name>
+        <rename>Error_code</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>no_of_errors</name>
+        <rename>No_of_errors</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_synced</name>
+        <rename>NOT_SYNCED</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -886,7 +916,7 @@
     </GUI>
   </step>
   <step>
-    <name>Get-Input-LineItems</name>
+    <name>Get-Input-Invoices</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -898,16 +928,17 @@
     </partitioning>
     <connection>Input Connection</connection>
     <sql>SELECT
-	CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), InvMaster.TimeStamp), 1) as currentTimeStamp,
-	InvMaster.StockCode,
-	InvMaster.Description,
-	InvMaster.MaterialCost as UnitCost,
-	InvMaster.ProductClass,
-	SalProductClassDes.Description as ProdDescription,
-	synced_record.sugarcrm_id,
-	synced_record.synced_time_stamp,
 
-	InvMaster.WarehouseToUse as Warehouse,
+	InvMovements.StockCode,
+	InvMaster.Description,
+	InvMovements.Invoice,
+	InvMovements.UnitCost,
+	CONCAT(InvMovements.StockCode, InvMovements.Invoice, InvMovements.Warehouse) AS UniqueID,
+	InvMovements.ProductClass,
+	SalProductClassDes.Description as ProdDescription,
+
+	
+	InvMovements.Warehouse,
 	InvWarehouse.QtyOnHand,
 	InvWarehouse.QtyInInspection,
 	InvWarehouse.QtyInTransit,
@@ -916,13 +947,14 @@
 	InvWarehouse.MinimumQty,
 	InvWarehouse.MaximumQty
 
-	FROM InvMaster
-	LEFT JOIN SalProductClassDes ON InvMaster.ProductClass = SalProductClassDes.ProductClass
-	LEFT JOIN InvWarehouse ON InvMaster.WarehouseToUse = InvWarehouse.Warehouse AND InvMaster.StockCode= InvWarehouse.StockCode
-	LEFT JOIN synced_record ON InvMaster.StockCode = synced_record.id AND synced_record.module = 'LineItems'
+	FROM InvMovements
+	INNER JOIN InvMaster ON InvMovements.StockCode = InvMaster.StockCode
+	INNER JOIN SalProductClassDes ON InvMovements.ProductClass = SalProductClassDes.ProductClass
+	INNER JOIN InvWarehouse ON InvMovements.Warehouse = InvWarehouse.Warehouse AND InvWarehouse.StockCode= InvMovements.StockCode
 
-	WHERE (synced_record.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), InvMaster.TimeStamp), 1) &lt;&gt; synced_record.synced_time_stamp) AND (synced_record.is_duplicate &lt;&gt; 1 OR synced_record.is_duplicate IS NULL)
-	ORDER BY InvMaster.StockCode ASC;</sql>
+	LEFT JOIN synced_record ON synced_record.id = CONCAT(InvMovements.StockCode, InvMovements.Invoice, InvMovements.Warehouse) AND synced_record.module = 'LineItems'
+	WHERE synced_record.id IS NULL AND InvMovements.Invoice IS NOT NULL AND InvMovements.Invoice &lt;&gt; ''
+	ORDER BY InvMovements.StockCode ASC</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -942,50 +974,7 @@
     </GUI>
   </step>
   <step>
-    <name>Is Already Synced</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Find Duplicate1</send_true_to>
-    <send_false_to>Update LineItem</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>sugarcrm_id</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text> </text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask>yyyy/MM/dd HH:mm:ss</mask>
-        </value>
-      </condition>
-    </compare>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>JSON Input</name>
+    <name>JSON Input 1</name>
     <type>JsonInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1015,21 +1004,8 @@
     </file>
     <fields>
       <field>
-        <name>records</name>
-        <path>$.records</path>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>record_id</name>
-        <path>$.records[0]id</path>
+        <name>invoice_id</name>
+        <path>$.records[0].id</path>
         <type>None</type>
         <format/>
         <currency/>
@@ -1044,7 +1020,7 @@
     <limit>0</limit>
     <IsInFields>Y</IsInFields>
     <IsAFile>N</IsAFile>
-    <valueField>result</valueField>
+    <valueField>invoice_result</valueField>
     <shortFileFieldName/>
     <pathFieldName/>
     <hiddenFieldName/>
@@ -1061,7 +1037,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
+      <xloc>576</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1083,14 +1059,69 @@
       <jsScript>
         <jsScript_type>0</jsScript_type>
         <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>var get_fields = {};
+get_fields.view = 'list';
+get_fields.max_num = '20';
+get_fields['filter[0][name]'] = Invoice;
+
+var out = [];
+
+for (var key in get_fields) {
+    if (get_fields.hasOwnProperty(key)) {
+        out.push(key + '=' + encodeURIComponent(get_fields[key]));
+    }
+}
+get_fields = out.join('&amp;');
+
+var API_URL = CRM_BASE_URL+'/rest/v11_2/Inv_Invoice?'+ get_fields;</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>API_URL</name>
+        <rename>API_URL</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Modified Java Script Value 2</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
         <jsScript_script>//Script here
 
 var post_fields = {};
-if(sugarcrm_id != '' &amp;&amp; sugarcrm_id != null){
-	post_fields.id=sugarcrm_id;
-}
 post_fields.name = StockCode;
 post_fields.description = Description;
+post_fields.inv_invoice_li_line_items_1inv_invoice_ida = invoice_id;
 
 post_fields.li_prod_class_c = ProductClass;
 post_fields.li_prod_class_desc_c = ProdDescription;
@@ -1111,23 +1142,13 @@ for (var key in post_fields) {
     }
 }
 
-post_fields = out.join('&amp;');
-var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_fields;
-</jsScript_script>
+post_fields = out.join('&amp;');</jsScript_script>
       </jsScript>
     </jsScripts>
     <fields>
       <field>
         <name>post_fields</name>
         <rename>post_fields</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>update_api</name>
-        <rename>update_api</rename>
         <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1142,7 +1163,75 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
+      <xloc>848</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Record Synced1</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>50</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>UniqueID</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>UniqueID</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_duplicate</name>
+        <rename>NOT_DUPLICATE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_synced</name>
+        <rename>SYNCED</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>create_result</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1072</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1228,14 +1317,14 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
+      <xloc>208</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update Error</name>
-    <type>InsertUpdate</type>
+    <name>Check Invoice</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1244,70 +1333,21 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Input Connection</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema/>
-      <table>synced_record</table>
-      <key>
-        <name>MODULE</name>
-        <field>module</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>StockCode</name>
-        <field>id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>id</name>
-        <rename>StockCode</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>module</name>
-        <rename>MODULE</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sync_error</name>
-        <rename>Error_description</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>error_field_name</name>
-        <rename>Error_fields_name</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>error_code</name>
-        <rename>Error_code</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>no_of_errors</name>
-        <rename>No_of_errors</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>NOT_SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
+    <send_true_to>Modified Java Script Value 2</send_true_to>
+    <send_false_to>Duplicate record1</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>invoice_id</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue>StockCode</rightvalue>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -1316,284 +1356,13 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update LineItem</name>
-    <type>Rest</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <applicationType>FORM URLENCODED</applicationType>
-    <method>PUT</method>
-    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/LI_Line_Items/LINEITEMID</url>
-    <urlInField>Y</urlInField>
-    <dynamicMethod>N</dynamicMethod>
-    <methodFieldName/>
-    <urlField>update_api</urlField>
-    <bodyField/>
-    <httpLogin/>
-    <httpPassword>Encrypted </httpPassword>
-    <proxyHost/>
-    <proxyPort/>
-    <preemptive>N</preemptive>
-    <trustStoreFile/>
-    <trustStorePassword>Encrypted </trustStorePassword>
-    <headers>
-      <header>
-        <field>access_token</field>
-        <name>OAuth-Token</name>
-      </header>
-    </headers>
-    <parameters>
-      </parameters>
-    <matrixParameters>
-      </matrixParameters>
-    <result>
-      <name>update_result</name>
-      <code/>
-      <response_time/>
-      <response_header/>
-    </result>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>JSON Input 2 2</name>
-    <type>JsonInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <readurl>N</readurl>
-    <removeSourceField>N</removeSourceField>
-    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <ignoreMissingPath>Y</ignoreMissingPath>
-    <defaultPathLeafToNull>Y</defaultPathLeafToNull>
-    <rownum_field/>
-    <file>
-      <name/>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-    </file>
-    <fields>
-      <field>
-        <name>updated_record_id</name>
-        <path>$.id</path>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <valueField>update_result</valueField>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Record Synced1 2</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Input Connection</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema/>
-      <table>synced_record</table>
-      <key>
-        <name>MODULE</name>
-        <field>module</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>StockCode</name>
-        <field>id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>id</name>
-        <rename>StockCode</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>module</name>
-        <rename>MODULE</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sync_error</name>
-        <rename>update_result</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sugarcrm_id</name>
-        <rename>updated_record_id</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>JSON Input 2 3</name>
-    <type>JsonInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <readurl>N</readurl>
-    <removeSourceField>N</removeSourceField>
-    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <ignoreMissingPath>Y</ignoreMissingPath>
-    <defaultPathLeafToNull>Y</defaultPathLeafToNull>
-    <rownum_field/>
-    <file>
-      <name/>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-    </file>
-    <fields>
-      <field>
-        <name>created_record_id</name>
-        <path>$.id</path>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <valueField>create_result</valueField>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1104</xloc>
+      <xloc>704</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Record Synced1</name>
+    <name>Duplicate record1</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -1616,122 +1385,24 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
         <name2/>
       </key>
       <key>
-        <name>StockCode</name>
+        <name>UniqueID</name>
         <field>id</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
         <name>id</name>
-        <rename>StockCode</rename>
-        <update>N</update>
+        <rename>UniqueID</rename>
+        <update>Y</update>
       </value>
       <value>
         <name>module</name>
         <rename>MODULE</rename>
-        <update>N</update>
+        <update>Y</update>
       </value>
       <value>
         <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sync_error</name>
-        <rename>create_result</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sugarcrm_id</name>
-        <rename>created_record_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1232</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Create Error1</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Input Connection</connection>
-    <commit>50</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema/>
-      <table>synced_record</table>
-      <key>
-        <name>MODULE</name>
-        <field>module</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>StockCode</name>
-        <field>id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>id</name>
-        <rename>StockCode</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>module</name>
-        <rename>MODULE</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sync_error</name>
-        <rename>Error_description</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>error_field_name</name>
-        <rename>Error_fields_name</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>error_code</name>
-        <rename>Error_code</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>no_of_errors</name>
-        <rename>No_of_errors</rename>
+        <rename>DUPLICATE</rename>
         <update>Y</update>
       </value>
       <value>
@@ -1739,11 +1410,6 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
         <rename>NOT_SYNCED</rename>
         <update>Y</update>
       </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
     </lookup>
     <cluster_schema/>
     <remotesteps>
@@ -1753,14 +1419,14 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       </output>
     </remotesteps>
     <GUI>
-      <xloc>976</xloc>
+      <xloc>704</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
     <error>
-      <source_step>Create LineItem</source_step>
+      <source_step>Create Contact1</source_step>
       <target_step>Create Error1</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename>No_of_errors</nr_valuename>
@@ -1772,8 +1438,8 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/LI_Line_Items/'+sugarcrm_id +'?'+post_
       <min_pct_rows/>
     </error>
     <error>
-      <source_step>Update LineItem</source_step>
-      <target_step>Update Error</target_step>
+      <source_step>Find Invoice</source_step>
+      <target_step>Find Invoice Error1</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename>No_of_errors</nr_valuename>
       <descriptions_valuename>Error_description</descriptions_valuename>
