@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>SerialHead-Final-Job</name>
+  <name>LinkInvoices-Job-Alt</name>
   <description/>
   <extended_description/>
   <job_version/>
@@ -344,12 +344,12 @@
       <yloc>112</yloc>
     </entry>
     <entry>
-      <name>SerialHead</name>
+      <name>LinkInvoices</name>
       <description/>
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${TARGET_TRAN_PATH}/SerialHead-Final.ktr</filename>
+      <filename>${TARGET_TRAN_PATH}/LinkInvoices-Final-Alt.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -402,7 +402,7 @@
     </hop>
     <hop>
       <from>Authentication</from>
-      <to>SerialHead</to>
+      <to>LinkInvoices</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -410,7 +410,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>SerialHead</from>
+      <from>LinkInvoices</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
