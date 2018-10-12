@@ -439,7 +439,7 @@
   <connection>
     <name>Input Connection</name>
     <server>${TARGET_DB_HOST}</server>
-    <type>MSSQL</type>
+    <type>MSSQLNATIVE</type>
     <access>Native</access>
     <database>${TARGET_DB_NAME}</database>
     <port>1433</port>
@@ -460,6 +460,10 @@
       <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MSSQLUseIntegratedSecurity</code>
+        <attribute>true</attribute>
       </attribute>
       <attribute>
         <code>MSSQL_DOUBLE_DECIMAL_SEPARATOR</code>
