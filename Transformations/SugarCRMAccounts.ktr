@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Accounts-Contact-Final</name>
+    <name>SugarCRMAccounts</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -498,28 +498,43 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get-Input-Account</from>
-      <to>Get Variables</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set Constants</from>
       <to>Modified Java Script Value</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Get-Input-Account</from>
+      <to>Get Variables</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Modified Java Script Value</from>
-      <to>REST Client</to>
+      <to>Find Account</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>REST Client</from>
-      <to>Sync Record</to>
+      <from>Find Account</from>
+      <to>Find Account Error1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>REST Client</from>
-      <to>Link Error</to>
+      <from>Find Account</from>
+      <to>JSON Input</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>JSON Input</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Insert / Update</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Dummy (do nothing)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -622,39 +637,19 @@
     </partitioning>
     <connection>Input Connection</connection>
     <sql>SELECT
+	
  	CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) as currentTimeStamp,
-	CONCAT(ArCustomer.Customer, CrmContact.ContactId) as UniqueId,
-	CrmContact.ContactId,
-	syncRCD.sugarcrm_id as sugarcrm_contact_id,
-	syncAccountRCD.sugarcrm_id as sugarcrm_account_id,
+	ArCustomer.Customer,
 	mainSyncRecord.id,
+	mainSyncRecord.sugarcrm_id,
 	mainSyncRecord.module,
 	mainSyncRecord.is_synced,
-	mainSyncRecord.is_duplicate,
-	mainSyncRecord.duplicate_sugarCRM_id,
-	mainSyncRecord.synced_time_stamp,
-	mainSyncRecord.sync_error,
-	mainSyncRecord.error_field_name,
-	mainSyncRecord.error_code,
-	mainSyncRecord.no_of_errors
+	mainSyncRecord.is_duplicate
 	FROM ArCustomer
-	INNER JOIN synced_record syncAccountRCD ON ArCustomer.Customer = syncAccountRCD.id AND syncAccountRCD.module='Accounts'
-	INNER JOIN CrmContact ON ArCustomer.Contact = CrmContact.FullName
-
-	AND CrmContact.ContactId =
-        ( SELECT TOP 1
-                 ContactId
-            FROM CrmContact
-           WHERE CrmContact.FullName = ArCustomer.Contact
-       )
-	INNER JOIN synced_record syncRCD ON CrmContact.ContactId = syncRCD.id AND syncRCD.module='Contacts'
-	
-	LEFT JOIN synced_record as mainSyncRecord ON mainSyncRecord.id = CONCAT(ArCustomer.Customer, CrmContact.ContactId) AND mainSyncRecord.module='AccountsContacts'
-
-	WHERE (mainSyncRecord.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) &lt;&gt; mainSyncRecord.synced_time_stamp) AND
-		(mainSyncRecord.is_duplicate &lt;&gt; 1 OR mainSyncRecord.is_duplicate IS NULL) AND 
-		syncRCD.sugarcrm_id &lt;&gt; ''
-	ORDER BY Customer ASC;</sql>
+	LEFT JOIN synced_record as mainSyncRecord ON mainSyncRecord.id = ArCustomer.Customer AND
+	mainSyncRecord.module='Accounts'
+	WHERE (mainSyncRecord.sugarcrm_id is NULL OR mainSyncRecord.sugarcrm_id='') AND mainSyncRecord.is_duplicate &lt;&gt;1
+	ORDER BY ArCustomer.Customer ASC</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -669,6 +664,71 @@
     </remotesteps>
     <GUI>
       <xloc>48</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Modified Java Script Value</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>var get_fields = {};
+get_fields.view = 'list';
+get_fields.max_num = '20';
+get_fields['filter[0][acc_number_c]'] = Customer;
+
+var out = [];
+
+for (var key in get_fields) {
+    if (get_fields.hasOwnProperty(key)) {
+        out.push(key + '=' + encodeURIComponent(get_fields[key]));
+    }
+}
+get_fields = out.join('&amp;');
+
+var API_URL = CRM_BASE_URL+'/rest/v11_2/Accounts?'+ get_fields;</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>get_fields</name>
+        <rename>get_fields</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>API_URL</name>
+        <rename>API_URL</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -740,7 +800,7 @@
         <currency/>
         <decimal/>
         <group/>
-        <nullif>AccountsContacts</nullif>
+        <nullif>Accounts</nullif>
         <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
@@ -760,68 +820,7 @@
     </GUI>
   </step>
   <step>
-    <name>Modified Java Script Value</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>//Script here
-
-//Script here
-
-// var post_fields='name='+Name;
-var link_post_fields = {};
-link_post_fields.link_name='contacts';
-link_post_fields.ids= [];
-link_post_fields.ids[0] = sugarcrm_contact_id;
-link_post_fields = JSON.stringify(link_post_fields);
-var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link';</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>link_post_fields</name>
-        <rename>link_post_fields</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>link_api</name>
-        <rename>link_api</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>REST Client</name>
+    <name>Find Account</name>
     <type>Rest</type>
     <description/>
     <distribute>N</distribute>
@@ -831,14 +830,14 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <applicationType>JSON</applicationType>
-    <method>POST</method>
-    <url/>
+    <applicationType>FORM URLENCODED</applicationType>
+    <method>GET</method>
+    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/Accounts</url>
     <urlInField>Y</urlInField>
     <dynamicMethod>N</dynamicMethod>
     <methodFieldName/>
-    <urlField>link_api</urlField>
-    <bodyField>link_post_fields</bodyField>
+    <urlField>API_URL</urlField>
+    <bodyField>post_fields</bodyField>
     <httpLogin/>
     <httpPassword>Encrypted </httpPassword>
     <proxyHost/>
@@ -857,7 +856,7 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
     <matrixParameters>
       </matrixParameters>
     <result>
-      <name>link_result</name>
+      <name>account_result</name>
       <code/>
       <response_time/>
       <response_header/>
@@ -870,13 +869,13 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
       </output>
     </remotesteps>
     <GUI>
-      <xloc>640</xloc>
+      <xloc>656</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Sync Record</name>
+    <name>Find Account Error1</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -887,7 +886,7 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>100</commit>
+    <commit>50</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -899,113 +898,20 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
         <name2/>
       </key>
       <key>
-        <name>UniqueId</name>
+        <name>Customer</name>
         <field>id</field>
         <condition>=</condition>
         <name2/>
       </key>
-      <value>
-        <name>id</name>
-        <rename>UniqueId</rename>
-        <update>N</update>
-      </value>
       <value>
         <name>module</name>
         <rename>CRMMODULE</rename>
         <update>N</update>
       </value>
       <value>
-        <name>sugarcrm_id</name>
-        <rename>sugarcrm_account_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sync_error</name>
-        <rename>link_result</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>800</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Link Error</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Input Connection</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema/>
-      <table>synced_record</table>
-      <key>
-        <name>UniqueId</name>
-        <field>id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>CRMMODULE</name>
-        <field>module</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
         <name>id</name>
-        <rename>UniqueId</rename>
+        <rename>Customer</rename>
         <update>N</update>
-      </value>
-      <value>
-        <name>module</name>
-        <rename>CRMMODULE</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>sugarcrm_id</name>
-        <rename>sugarcrm_account_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>NOT_SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
       </value>
       <value>
         <name>sync_error</name>
@@ -1019,7 +925,12 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
       </value>
       <value>
         <name>error_code</name>
-        <rename>Error_code_1</rename>
+        <rename>Error_code</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>no_of_errors</name>
+        <rename>No_of_errors</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -1031,15 +942,210 @@ var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ sugarcrm_account_id +'/link'
       </output>
     </remotesteps>
     <GUI>
-      <xloc>640</xloc>
+      <xloc>656</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>JSON Input</name>
+    <type>JsonInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <include>N</include>
+    <include_field/>
+    <rownum>N</rownum>
+    <addresultfile>N</addresultfile>
+    <readurl>N</readurl>
+    <removeSourceField>N</removeSourceField>
+    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
+    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
+    <ignoreMissingPath>Y</ignoreMissingPath>
+    <defaultPathLeafToNull>Y</defaultPathLeafToNull>
+    <rownum_field/>
+    <file>
+      <name/>
+      <filemask/>
+      <exclude_filemask/>
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+    </file>
+    <fields>
+      <field>
+        <name>account_id</name>
+        <path>$.records[0].id</path>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+    </fields>
+    <limit>0</limit>
+    <IsInFields>Y</IsInFields>
+    <IsAFile>N</IsAFile>
+    <valueField>account_result</valueField>
+    <shortFileFieldName/>
+    <pathFieldName/>
+    <hiddenFieldName/>
+    <lastModificationTimeFieldName/>
+    <uriNameFieldName/>
+    <rootUriNameFieldName/>
+    <extensionFieldName/>
+    <sizeFieldName/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert / Update</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>Customer</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>CRMMODULE</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>Customer</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>CRMMODULE</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>sugarcrm_id</name>
+        <rename>account_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>account_result</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>synced_time_stamp</name>
+        <rename>currentTimeStamp</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Insert / Update</send_true_to>
+    <send_false_to>Dummy (do nothing)</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>account_id</leftvalue>
+        <function>IS NOT NULL</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>944</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>944</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
     <error>
-      <source_step>REST Client</source_step>
-      <target_step>Link Error</target_step>
+      <source_step>Find Account</source_step>
+      <target_step>Find Account Error1</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename>No_of_errors</nr_valuename>
       <descriptions_valuename>Error_description</descriptions_valuename>
