@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Accounts-Final</name>
+    <name>Accounts-Contact-Final</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -543,6 +543,11 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Create Account</from>
+      <to>JSON Input 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Modified Java Script Value</from>
       <to>Is Already Synced</to>
       <enabled>Y</enabled>
@@ -574,12 +579,7 @@
     </hop>
     <hop>
       <from>JSON Input 2</from>
-      <to>Record Synced22</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Create Account</from>
-      <to>JSON Input 2</to>
+      <to>Record Synced1 2 2</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1083,8 +1083,10 @@
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <sql>SELECT
+    <sql>SELECT TOP 10
  	CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) as currentTimeStamp,
+	syncRCD.sugarcrm_id sugarcrm_contact_id,
+	CrmContact.ContactId,
 	ArCustomer.*,
 	mainSyncRecord.id,
 	mainSyncRecord.sugarcrm_id,
@@ -1099,7 +1101,20 @@
 	mainSyncRecord.no_of_errors
 	FROM ArCustomer
 	LEFT JOIN synced_record as mainSyncRecord ON mainSyncRecord.id = ArCustomer.Customer AND mainSyncRecord.module='Accounts'
-	WHERE (mainSyncRecord.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) &lt;&gt; mainSyncRecord.synced_time_stamp) AND (mainSyncRecord.is_duplicate &lt;&gt; 1 OR mainSyncRecord.is_duplicate IS NULL)
+	LEFT JOIN CrmContact ON ArCustomer.Contact = CrmContact.FullName
+
+	AND CrmContact.ContactId =
+        ( SELECT TOP 1
+                 ContactId
+            FROM CrmContact
+           WHERE CrmContact.FullName = ArCustomer.Contact
+       )
+
+
+	LEFT JOIN synced_record syncRCD ON CrmContact.ContactId = syncRCD.id AND syncRCD.module='Contacts'
+	WHERE (mainSyncRecord.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) &lt;&gt; mainSyncRecord.synced_time_stamp) AND
+		(mainSyncRecord.is_duplicate &lt;&gt; 1 OR mainSyncRecord.is_duplicate IS NULL) AND
+		syncRCD.sugarcrm_id &lt;&gt; ''
 	ORDER BY Customer ASC</sql>
     <limit>0</limit>
     <lookup/>
@@ -1308,7 +1323,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
+      <xloc>1264</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1407,6 +1422,7 @@ if(sugarcrm_id != '' &amp;&amp; sugarcrm_id != null){
 post_fields.id=sugarcrm_id;
 }
 post_fields.name=Name;
+post_fields.contact_id=sugarcrm_contact_id;
 post_fields.acc_number_c=Customer;
 post_fields.acc_branch_c=Branch;
 post_fields.acc_area_c=Area;
@@ -1573,7 +1589,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
     </GUI>
   </step>
   <step>
-    <name>Record Synced22</name>
+    <name>Record Synced1 2 2</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -1584,7 +1600,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>50</commit>
+    <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
@@ -1645,8 +1661,8 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1344</xloc>
-      <yloc>96</yloc>
+      <xloc>1104</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -543,6 +543,16 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Create Account</from>
+      <to>JSON Input 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>JSON Input 2</from>
+      <to>Record Synced1</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Modified Java Script Value</from>
       <to>Is Already Synced</to>
       <enabled>Y</enabled>
@@ -573,13 +583,63 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>JSON Input 2</from>
-      <to>Record Synced22</to>
+      <from>Modified Java Script Value 2</from>
+      <to>Link Contact</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create Account</from>
-      <to>JSON Input 2</to>
+      <from>Record Synced1 2</from>
+      <to>Contact Exist</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contact Exist</from>
+      <to>Modified Java Script Value 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contact Exist</from>
+      <to>Dummy (do nothing)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Link Contact</from>
+      <to>Record Synced1 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Link Contact</from>
+      <to>Link Error</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Link Contact 2</from>
+      <to>Record Synced1 3 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Modified Java Script Value 2 2</from>
+      <to>Link Contact 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Record Synced1</from>
+      <to>Contact Exist 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contact Exist 2</from>
+      <to>Modified Java Script Value 2 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contact Exist 2</from>
+      <to>Dummy (do nothing) 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Link Contact 2</from>
+      <to>Link Error 2</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -623,6 +683,92 @@
     <GUI>
       <xloc>992</xloc>
       <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Contact Exist</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Modified Java Script Value 2</send_true_to>
+    <send_false_to>Dummy (do nothing)</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>sugarcrm_contact_id</leftvalue>
+        <function>IS NOT NULL</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text/>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>Y</isnull>
+          <mask>yyyy/MM/dd HH:mm:ss</mask>
+        </value>
+      </condition>
+    </compare>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Contact Exist 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Modified Java Script Value 2 2</send_true_to>
+    <send_false_to>Dummy (do nothing) 2</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>sugarcrm_contact_id</leftvalue>
+        <function>IS NOT NULL</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text/>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>Y</isnull>
+          <mask>yyyy/MM/dd HH:mm:ss</mask>
+        </value>
+      </condition>
+    </compare>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -699,7 +845,7 @@
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -717,7 +863,7 @@
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
@@ -770,6 +916,54 @@
     </GUI>
   </step>
   <step>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Dummy (do nothing) 2</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1280</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Duplicate Error1</name>
     <type>InsertUpdate</type>
     <description/>
@@ -787,7 +981,7 @@
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -805,7 +999,7 @@
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
@@ -875,7 +1069,7 @@
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -893,7 +1087,7 @@
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
@@ -907,7 +1101,7 @@
         <update>Y</update>
       </value>
       <value>
-        <name>duplicate_sugarCRM_id</name>
+        <name>duplicate_sugarcrm_id</name>
         <rename>record_id</rename>
         <update>Y</update>
       </value>
@@ -1084,22 +1278,17 @@
     </partitioning>
     <connection>Input Connection</connection>
     <sql>SELECT
+
  	CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) as currentTimeStamp,
+	syncRCD.sugarcrm_id sugarcrm_contact_id,
+	CrmContact.ContactId,
 	ArCustomer.*,
-	mainSyncRecord.id,
-	mainSyncRecord.sugarcrm_id,
-	mainSyncRecord.module,
-	mainSyncRecord.is_synced,
-	mainSyncRecord.is_duplicate,
-	mainSyncRecord.duplicate_sugarCRM_id,
-	mainSyncRecord.synced_time_stamp,
-	mainSyncRecord.sync_error,
-	mainSyncRecord.error_field_name,
-	mainSyncRecord.error_code,
-	mainSyncRecord.no_of_errors
+	synced_record.*
 	FROM ArCustomer
-	LEFT JOIN synced_record as mainSyncRecord ON mainSyncRecord.id = ArCustomer.Customer AND mainSyncRecord.module='Accounts'
-	WHERE (mainSyncRecord.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) &lt;&gt; mainSyncRecord.synced_time_stamp) AND (mainSyncRecord.is_duplicate &lt;&gt; 1 OR mainSyncRecord.is_duplicate IS NULL)
+	LEFT JOIN synced_record ON synced_record.id = ArCustomer.Customer AND synced_record.module='Accounts'
+	LEFT JOIN CrmContact ON ArCustomer.Contact = CrmContact.FullName
+	LEFT JOIN synced_record syncRCD ON CrmContact.ContactId = syncRCD.id AND syncRCD.module='Contacts'
+	WHERE (synced_record.id IS NULL OR CONVERT(NVARCHAR(MAX), CONVERT(BINARY(8), ArCustomer.TimeStamp), 1) &lt;&gt; synced_record.synced_time_stamp) AND (synced_record.is_duplicate &lt;&gt; 1 OR synced_record.is_duplicate IS NULL)
 	ORDER BY Customer ASC</sql>
     <limit>0</limit>
     <lookup/>
@@ -1308,7 +1497,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
+      <xloc>1264</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1383,6 +1572,262 @@
     </GUI>
   </step>
   <step>
+    <name>Link Contact</name>
+    <type>Rest</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <applicationType>JSON</applicationType>
+    <method>POST</method>
+    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/Accounts/ACCOUNTID?LINK</url>
+    <urlInField>Y</urlInField>
+    <dynamicMethod>N</dynamicMethod>
+    <methodFieldName/>
+    <urlField>link_api</urlField>
+    <bodyField>link_post_fields</bodyField>
+    <httpLogin/>
+    <httpPassword>Encrypted </httpPassword>
+    <proxyHost/>
+    <proxyPort/>
+    <preemptive>N</preemptive>
+    <trustStoreFile/>
+    <trustStorePassword>Encrypted </trustStorePassword>
+    <headers>
+      <header>
+        <field>access_token</field>
+        <name>OAuth-Token</name>
+      </header>
+    </headers>
+    <parameters>
+      </parameters>
+    <matrixParameters>
+      </matrixParameters>
+    <result>
+      <name>link_result</name>
+      <code/>
+      <response_time/>
+      <response_header/>
+    </result>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Link Contact 2</name>
+    <type>Rest</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <applicationType>JSON</applicationType>
+    <method>POST</method>
+    <url>${TARGET_SUGARCRM_URL}/rest/v11_2/Accounts/ACCOUNTID?LINK</url>
+    <urlInField>Y</urlInField>
+    <dynamicMethod>N</dynamicMethod>
+    <methodFieldName/>
+    <urlField>link_api</urlField>
+    <bodyField>link_post_fields</bodyField>
+    <httpLogin/>
+    <httpPassword>Encrypted </httpPassword>
+    <proxyHost/>
+    <proxyPort/>
+    <preemptive>N</preemptive>
+    <trustStoreFile/>
+    <trustStorePassword>Encrypted </trustStorePassword>
+    <headers>
+      <header>
+        <field>access_token</field>
+        <name>OAuth-Token</name>
+      </header>
+    </headers>
+    <parameters>
+      </parameters>
+    <matrixParameters>
+      </matrixParameters>
+    <result>
+      <name>link_result</name>
+      <code/>
+      <response_time/>
+      <response_header/>
+    </result>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Link Error</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE_1</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>Customer</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>Customer</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE_1</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>Error_description</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_field_name</name>
+        <rename>Error_fields_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_code</name>
+        <rename>Error_code</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>no_of_errors</name>
+        <rename>No_of_errors</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Link Error 2</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE_1</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>Customer</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>Customer</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE_1</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>Error_description</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_field_name</name>
+        <rename>Error_fields_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>error_code</name>
+        <rename>Error_code</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>no_of_errors</name>
+        <rename>No_of_errors</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>512</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Modified Java Script Value</name>
     <type>ScriptValueMod</type>
     <description/>
@@ -1407,6 +1852,7 @@ if(sugarcrm_id != '' &amp;&amp; sugarcrm_id != null){
 post_fields.id=sugarcrm_id;
 }
 post_fields.name=Name;
+post_fields.contact_id=sugarcrm_contact_id;
 post_fields.acc_number_c=Customer;
 post_fields.acc_branch_c=Branch;
 post_fields.acc_area_c=Area;
@@ -1495,7 +1941,125 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
     </GUI>
   </step>
   <step>
-    <name>Record Synced1 2</name>
+    <name>Modified Java Script Value 2</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// var post_fields='name='+Name;
+var link_post_fields = {};
+link_post_fields.link_name='contacts';
+link_post_fields.ids= [];
+link_post_fields.ids[0] = sugarcrm_contact_id;
+link_post_fields = JSON.stringify(link_post_fields);
+var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+updated_record_id +'/link';</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>link_post_fields</name>
+        <rename>link_post_fields</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>link_api</name>
+        <rename>link_api</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Modified Java Script Value 2 2</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// var post_fields='name='+Name;
+var link_post_fields = {};
+link_post_fields.link_name='contacts';
+link_post_fields.ids= [];
+link_post_fields.ids[0] = sugarcrm_contact_id;
+link_post_fields = JSON.stringify(link_post_fields);
+var link_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+ created_record_id +'/link';</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>link_post_fields</name>
+        <rename>link_post_fields</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>link_api</name>
+        <rename>link_api</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Record Synced1</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -1512,7 +2076,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -1530,7 +2094,85 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>is_duplicate</name>
+        <rename>NOT_DUPLICATE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_synced</name>
+        <rename>SYNCED</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sugarcrm_id</name>
+        <rename>created_record_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>synced_time_stamp</name>
+        <rename>currentTimeStamp</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>create_result</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Record Synced1 2</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE_1</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>Customer</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>Customer</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
@@ -1573,7 +2215,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
     </GUI>
   </step>
   <step>
-    <name>Record Synced22</name>
+    <name>Record Synced1 3</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -1584,13 +2226,13 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       <schema_name/>
     </partitioning>
     <connection>Input Connection</connection>
-    <commit>50</commit>
+    <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -1608,32 +2250,12 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
-        <name>is_duplicate</name>
-        <rename>NOT_DUPLICATE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>is_synced</name>
-        <rename>SYNCED</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>synced_time_stamp</name>
-        <rename>currentTimeStamp</rename>
-        <update>Y</update>
-      </value>
-      <value>
         <name>sync_error</name>
-        <rename>create_result</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>sugarcrm_id</name>
-        <rename>created_record_id</rename>
+        <rename>link_result</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -1645,8 +2267,66 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1344</xloc>
-      <yloc>96</yloc>
+      <xloc>1248</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Record Synced1 3 2</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Input Connection</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>synced_record</table>
+      <key>
+        <name>MODULE_1</name>
+        <field>module</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>Customer</name>
+        <field>id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>Customer</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>module</name>
+        <rename>MODULE_1</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>sync_error</name>
+        <rename>link_result</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1232</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1755,7 +2435,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>CRMMODULE</name>
+        <name>MODULE</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1853,7 +2533,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       <schema/>
       <table>synced_record</table>
       <key>
-        <name>CRMMODULE</name>
+        <name>MODULE_1</name>
         <field>module</field>
         <condition>=</condition>
         <name2/>
@@ -1871,7 +2551,7 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
       </value>
       <value>
         <name>module</name>
-        <rename>CRMMODULE</rename>
+        <rename>MODULE_1</rename>
         <update>N</update>
       </value>
       <value>
@@ -1939,6 +2619,30 @@ var update_api= CRM_BASE_URL+'/rest/v11_2/Accounts/'+sugarcrm_id +'?'+post_field
     <error>
       <source_step>Find Duplicate1</source_step>
       <target_step>Duplicate Error1</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename>No_of_errors</nr_valuename>
+      <descriptions_valuename>Error_description</descriptions_valuename>
+      <fields_valuename>Error_fields_name</fields_valuename>
+      <codes_valuename>Error_code</codes_valuename>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
+    </error>
+    <error>
+      <source_step>Link Contact</source_step>
+      <target_step>Link Error</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename>No_of_errors</nr_valuename>
+      <descriptions_valuename>Error_description</descriptions_valuename>
+      <fields_valuename>Error_fields_name</fields_valuename>
+      <codes_valuename>Error_code</codes_valuename>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
+    </error>
+    <error>
+      <source_step>Link Contact 2</source_step>
+      <target_step>Link Error 2</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename>No_of_errors</nr_valuename>
       <descriptions_valuename>Error_description</descriptions_valuename>
